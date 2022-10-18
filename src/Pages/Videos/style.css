@@ -1,0 +1,52 @@
+.videos{
+	background-color: #f2f2f2;
+	padding-top: 20px;
+	padding-bottom: 40px;
+	min-height: 100vh;
+}
+.videos h3{
+	margin-bottom: 20px;
+}
+.videos .card {
+	border-radius: 8px;
+	overflow: hidden;
+}
+
+.videos  video{
+width: 100%;
+height: 300px;
+object-fit: cover;
+}
+
+.videos .box a,
+.videos .box h2{
+	margin-left: 20px;
+}
+.videos .box span{
+	float: right;
+	margin-right: 20px;
+}
+
+video::-internal-media-controls-download-button {
+    display:none;
+}
+
+video::-webkit-media-controls-enclosure {
+    overflow:hidden;
+}
+
+video::-webkit-media-controls-panel {
+    width: calc(100% + 30px); /* Adjust as needed */
+}
+
+.msg{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 70vh;
+}
+.msg h2{
+	font-weight: 900;
+    color: #8e8e8e;
+    font-family: sans-serif;
+}
