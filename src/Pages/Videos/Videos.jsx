@@ -47,7 +47,7 @@ const Videos = () => {
           <div className="row">
             {
               workData.length !== 0 ? workData?.map((doc, key) => (
-                <div className="col-4" key={key}>
+                <div className="col-12 col-md-4" key={key}>
                     <div className="card bg-dark">
                     <video src={doc.video} alt="" controls  />
                     <div className="card-body">

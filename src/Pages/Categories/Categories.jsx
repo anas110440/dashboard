@@ -29,7 +29,7 @@ const Categories = () => {
 
             <div className="row">
               <div className="col-sm-12">
-              <div className="card text-white bg-dark">
+              <div className="card text-white bg-dark mb-5">
 
               <div className="card-header border-primary">
 										<i className="fas fa-folder-open"></i> Latest Categories
@@ -40,7 +40,7 @@ const Categories = () => {
 
                      { category.map(({id, name,description,image,status}) => ( 
 
-                       <div className="card-body" key={id}>
+                       <div className="card-body " key={id}>
 											<ul className="list-unstyled latest-categories">
 												<div className="cate">
                           <div className="hidden-button">
@@ -52,10 +52,10 @@ const Categories = () => {
 
                             </div>
                             <div className="row">
-                              <div className="col-2">
+                              <div className="col-4 col-md-2">
                                 <img src={image} alt="" />
                               </div>
-                              <div className="col-10">
+                              <div className="col-md-10 col-8">
 
                             <h2><Link to={`/category/videos/${id}`}>{name}</Link></h2>
                             <div className="full-view">
