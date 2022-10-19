@@ -17,7 +17,7 @@ function App() {
   return (
     <BrowserRouter>
     <Routes>
-      <Route  path="/" element={hasAccount? <Dashboard setHasAccount={setHasAccount} /> :
+      <Route  path="/dashboard" element={hasAccount? <Dashboard setHasAccount={setHasAccount} /> :
       <Login setHasAccount={setHasAccount} />} />
 
       <Route path='/category' element={hasAccount?  <Categories />  :
