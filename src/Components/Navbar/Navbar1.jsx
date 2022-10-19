@@ -3,13 +3,17 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { getAuth, signOut  } from "firebase/auth";
-import {NavLink} from "react-router-dom"
+import {useNavigate, NavLink} from "react-router-dom"
+
+
 const Navbar1 = ({setHasAccount}) => {
 const auth = getAuth();
+const navigate = useNavigate()
 
 const handleLogOut = ()=>{
   signOut(auth).then(() => {
     console.log("sucess");
+    navigate("/dashboard")
     // Sign-out successful.
     setHasAccount(false)
   }).catch((error) => {

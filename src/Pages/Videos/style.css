@@ -11,6 +11,9 @@
 	border-radius: 8px;
 	overflow: hidden;
 }
+.videos .card .card-title{
+	color: #fff;
+}
 
 .videos  video{
 width: 100%;
