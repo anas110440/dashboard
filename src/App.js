@@ -17,6 +17,13 @@ function App() {
   return (
     <BrowserRouter>
     <Routes>
+
+    <Route exact path="/" element={hasAccount? <Categories setHasAccount={setHasAccount} /> :
+      <Login setHasAccount={setHasAccount} />} />
+
+<Route exact path="/login" element={!hasAccount?
+      <Login setHasAccount={setHasAccount} /> : <Categories setHasAccount={setHasAccount} />} />
+
       <Route exact path="/dashboard" element={hasAccount? <Categories setHasAccount={setHasAccount} /> :
       <Login setHasAccount={setHasAccount} />} />
 

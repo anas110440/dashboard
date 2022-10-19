@@ -2,18 +2,20 @@ import React from 'react'
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import { getAuth, signOut  } from "firebase/auth";
+import { getAuth, reload, signOut  } from "firebase/auth";
 import {useNavigate, NavLink} from "react-router-dom"
 
 
 const Navbar1 = ({setHasAccount}) => {
 const auth = getAuth();
+
 const navigate = useNavigate()
 
 const handleLogOut = ()=>{
   signOut(auth).then(() => {
+    navigate("/dashboard");
+    reload()
     console.log("sucess");
-    navigate("/dashboard")
     // Sign-out successful.
     setHasAccount(false)
   }).catch((error) => {
