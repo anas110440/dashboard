@@ -14,7 +14,6 @@ const navigate = useNavigate()
 const handleLogOut = ()=>{
   signOut(auth).then(() => {
     navigate("/dashboard");
-    reload()
     console.log("sucess");
     // Sign-out successful.
     setHasAccount(false)

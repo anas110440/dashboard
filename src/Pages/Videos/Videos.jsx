@@ -12,7 +12,6 @@ import { useState } from 'react'
 const Videos = () => {
   const { id } = useParams();
   const [workData, setWorkData] = useState([])
-  const [cat, setCat] = useState([])
 
   useEffect(() => {
 
@@ -22,7 +21,6 @@ const Videos = () => {
           const data = snapshot.docs.map((doc)=>({
               ...doc.data(), id:doc.id
           }))
-          setCat(data)
           data.map(async (elem)=>{
             const workQ = query(collection(db, `category/${id}/videos`))
             const workDetails = await getDocs(workQ)
