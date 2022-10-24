@@ -7,6 +7,7 @@ import { storage, db } from "../../../Firebase/firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const AddCate = () => {
   const [formData, setFormData] = useState({
@@ -134,9 +135,12 @@ const navigate = useNavigate()
               <option value="0">Not Available</option>
             </Form.Select>
 
-            <Button variant="primary" type="submit" >
-                Add New
+            <Button variant="success" type="submit" className='w-25 float-end' >
+                Add
             </Button>
+            <Link to="/category" className='w-25 btn btn-primary' >
+                Back
+            </Link>
         </Form>
      </div>
     </Dashboard>

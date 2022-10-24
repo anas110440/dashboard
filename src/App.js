@@ -8,6 +8,7 @@ import {BrowserRouter, Routes, Route,} from "react-router-dom";
 import Edit from './Pages/Categories/Edit/Edit';
 import AddVideo from './Pages/Videos/AddVideo/AddVideo';
 import EditVideo from './Pages/Videos/Edit/Edit';
+import Screen from './Components/Screen/Screen';
 
 function App() {
   
@@ -46,6 +47,7 @@ function App() {
       <Route path='/category/video/edit/:id/:cateid' element={hasAccount?  <EditVideo />  :
       <Login setHasAccount={setHasAccount} />} />
 
+      <Route path="/screen" element={<Screen />} />
     </Routes>
 
       

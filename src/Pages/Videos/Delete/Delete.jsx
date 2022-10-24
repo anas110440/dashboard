@@ -4,7 +4,7 @@ import { db, storage } from "../../../Firebase/firebase";
 import { deleteObject, ref } from "firebase/storage";
 import { useNavigate } from 'react-router-dom';
 
-export default function Delete({ id, video ,cateid}) {
+export default function Delete({ id, video ,cateid, image}) {
   const navigate = useNavigate()
 
   const handleDelete = async () => {
@@ -13,6 +13,8 @@ export default function Delete({ id, video ,cateid}) {
         await deleteDoc(doc(db, `category/${cateid}/videos/${id}`));
         const storageRef = ref(storage, video)
         await deleteObject(storageRef);
+        const storageRef2 = ref(storage, image)
+        await deleteObject(storageRef2);
         navigate("/category")
       } catch (error) {
         console.log(error);

@@ -82,7 +82,7 @@ const navigate = useNavigate()
                 status: formData.status === "true" ? true : false || status === "true" ? true : false,
               })
                 .then(() => {
-                  navigate(`/category/$`)
+                  navigate(`/category/`)
         
                 })
                 .catch((err) => {

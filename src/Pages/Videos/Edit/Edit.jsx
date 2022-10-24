@@ -6,7 +6,7 @@ import { updateDoc, doc } from "firebase/firestore";
 import { storage, db } from "../../../Firebase/firebase";
 import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
 import ProgressBar from 'react-bootstrap/ProgressBar';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import BookDataService from "./BookDataService";
 
@@ -15,18 +15,31 @@ const EditVideo = () => {
     const { id, cateid } = useParams();
     const [title, setTitle] = useState("");
     const [video, setVideo] = useState("");
+    const [img, setImg] = useState("");
+    const [status, setStatus] = useState("");
     const [formData, setFormData] = useState({
-    title: title,
-    video: video,
+    title: "",
+    video: "",
+    status: "" ,
+    image: "" ,
+
   });
 
+  console.log(formData)
 
-const navigate = useNavigate()
+  const navigate = useNavigate()
   const [progress, setProgress] = useState(0);
+  const [progressImg, setProgressImg] = useState(0);
 
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleImageChange = (e) => {
     setFormData({ ...formData, video: e.target.files[0] });
+  };
+  const handleImageCov = (e) => {
+    setFormData({ ...formData, image: e.target.files[0] });
   };
 
 
@@ -35,16 +48,103 @@ const navigate = useNavigate()
 
 
 
-    if(formData.video.name){
+    if(formData.video.name && formData.image.name ){
 
-        const handleDelete = async () => {
-                const storageRef = ref(storage, video);
-                await deleteObject(storageRef);
+      const handleDelete = async () => {
+        const storageRef = ref(storage, video);
+        await deleteObject(storageRef);
+
+        const storageRef2 = ref(storage, img);
+        await deleteObject(storageRef2);
+    }
+    handleDelete()
+    const storageRef = ref (storage, `/${cateid}/${Date.now()}${formData.video.name}`);
+
+    const uploadImage = uploadBytesResumable(storageRef, formData.video);
+
+    uploadImage.on(
+      "state_changed",
+      (snapshot) => {
+        const progressPercent = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
+        setProgress(progressPercent);
+      },
+      (err) => {
+        console.log(err);
+      },
+      () => {
+        setFormData({
+          title: "",
+          video: "",
+          status: "",
+
+        });
+
+      
+
+        getDownloadURL(uploadImage.snapshot.ref).then((url) => {
+          let vidUrl = url;
+
+          const storageRef = ref (storage, `/${cateid}/${Date.now()}${formData.image.name}`);
+
+          const uploadImage = uploadBytesResumable(storageRef, formData.image);
+      
+          uploadImage.on(
+            "state_changed",
+            (snapshot) => {
+              const progressPercent = Math.round(
+                (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+              );
+              setProgressImg(progressPercent);
+            },
+            (err) => {
+              console.log(err);
+            },
+            () => {
+              setFormData({
+                title: "",
+                video: "",
+                category: "",
+                status: "",
+      
+              });
+      
+            
+      
+              getDownloadURL(uploadImage.snapshot.ref).then((url) => {
+      
+                const refrance = doc(db, "category", cateid, "videos", id );
+                updateDoc(refrance, {
+                    title: title || formData.title,
+                    video:  vidUrl,
+                    image: url,
+                    status: formData.status === "true" ? true : false || status === "true" ? true : false,
+                })
+                  .then(() => {
+                    navigate(`/category/videos/${cateid}`)
+      
+                  })
+                  .catch((err) => {
+                    console.log("Error Edit Category", { type: "error" });
+
+                  });
+              });
             }
-            handleDelete()
-        const storageRef = ref (storage, `/category-video/${Date.now()}${formData.video.name}`);
-        const uploadImage = uploadBytesResumable(storageRef, formData.video );
+          );
+        });
+      }
+    );
+        }else if(formData.video.name){
+          const handleDelete = async () => {
+            const storageRef = ref(storage, video);
+            await deleteObject(storageRef);
+        }
+        handleDelete()
+        const storageRef = ref (storage, `/${cateid}/${Date.now()}${formData.video.name}`);
 
+        const uploadImage = uploadBytesResumable(storageRef, formData.video);
+    
         uploadImage.on(
           "state_changed",
           (snapshot) => {
@@ -59,36 +159,98 @@ const navigate = useNavigate()
           () => {
             setFormData({
               title: "",
+              video: "",
+              status: "",
+    
             });
+    
+          
+    
             getDownloadURL(uploadImage.snapshot.ref).then((url) => {
-              const refrance = doc(db, "category", cateid, "videos", id);
-              updateDoc(refrance, {
-                title: formData.title || title,
-                video:  url,
-              })
-                .then(() => {
-                  navigate(`/category/videos/${cateid}`)
-        
-                })
-                .catch((err) => {
-                  console.log("Error Edit Category", { type: "error" });
-                });
+                    const refrance = doc(db, "category", cateid, "videos", id );
+                    updateDoc(refrance, {
+                        title: title || formData.title,
+                        video:  url,
+                        image: img,
+                        status: formData.status === "true" ? true : false || status === "true" ? true : false,
+                    })
+                      .then(() => {
+                        navigate(`/category/videos/${cateid}`)
+          
+                      })
+                      .catch((err) => {
+                        console.log("Error Edit Category", { type: "error" });
+
+                      });
+                  });
+          }
+        );
+        }else if(formData.image.name){
+          const handleDelete = async () => {
+            const storageRef = ref(storage, img);
+            await deleteObject(storageRef);
+        }
+        handleDelete()
+        const storageRef = ref (storage, `/${cateid}/${Date.now()}${formData.image.name}`);
+
+        const uploadImage = uploadBytesResumable(storageRef, formData.image);
+    
+        uploadImage.on(
+          "state_changed",
+          (snapshot) => {
+            const progressPercent = Math.round(
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+            );
+            setProgress(progressPercent);
+          },
+          (err) => {
+            console.log(err);
+          },
+          () => {
+            setFormData({
+              title: "",
+              video: "",
+              status: "",
+    
             });
+    
+          
+    
+            getDownloadURL(uploadImage.snapshot.ref).then((url) => {
+                    const refrance = doc(db, "category", cateid, "videos", id );
+                    updateDoc(refrance, {
+                        title: title || formData.title,
+                        video:  video,
+                        image: url,
+                        status: formData.status === "true" ? true : false || status === "true" ? true : false,
+                    })
+                      .then(() => {
+                        navigate(`/category/videos/${cateid}`)
+          
+                      })
+                      .catch((err) => {
+                        console.log("Error Edit Category", { type: "error" });
+
+                      });
+                  });
           }
         );
         }else{
-            const refrance = doc(db, "category", cateid, "videos", id );
-            updateDoc(refrance, {
-                title: formData.title || title,
-                video:  video,
+          const refrance = doc(db, "category", cateid, "videos", id );
+          updateDoc(refrance, {
+              title:  title || formData.title ,
+              video:  video,
+              status: formData.status === "true" ? true : false || status === "true" ? true : false,
+              image: img,
+
+            })
+              .then(() => {
+                navigate(`/category/videos/${cateid}`)
+      
               })
-                .then(() => {
-                  navigate(`/category/videos/${cateid}`)
-        
-                })
-                .catch((err) => {
-                  console.log("Error Edit Category", { type: "error" });
-                });
+              .catch((err) => {
+                console.log("Error Edit Category", { type: "error" });
+              });
         }
     }
 
@@ -103,9 +265,13 @@ const navigate = useNavigate()
       const docSnap = await BookDataService.getBook(id, cateid);
       setTitle(docSnap.data().title);
       setVideo(docSnap.data().video);
+      setImg(docSnap.data().image);
+      setStatus(docSnap.data().status);
       setFormData({
-        title: title,
-        video: video,
+        title: docSnap.data().title,
+        video: docSnap.data().video,
+        status: docSnap.data().status,
+        image : docSnap.data().image
       })
     } catch (err) {
       console.log({ error: true, msg: err.message });
@@ -135,7 +301,7 @@ const navigate = useNavigate()
               name="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              required />
+               />
             </Form.Group>
 
        
@@ -151,12 +317,38 @@ const navigate = useNavigate()
                   <ProgressBar striped variant="success" now={progress} />
 
           )}
+          
+          <Form.Group controlId="formFile" className="mb-3">
+            <Form.Label>Select The Cover Image</Form.Label>
+            <Form.Control type="file"
+                     accept="image/*"
+                     onChange={(e) => handleImageCov(e)}
+                      
+                       />
+            </Form.Group>
+            {progress === 0 ? null : (
+                  <ProgressBar striped variant="success" now={progressImg} />
 
+          )}
+            <Form.Label>Status</Form.Label>
+            <Form.Select aria-label="Default select example" className="mb-4"
+              onChange={(e) => handleChange(e) }
+              name="status"
+              defaultValue={status}
+              required
+               >
+              <option value="" >Choose Status</option>
+              <option value={true}>Available</option>
+              <option value={false}>Not Available</option>
+            </Form.Select>
        
 
-            <Button variant="primary" type="submit" >
+            <Button variant="success" type="submit" className='w-25 float-end' >
                 Update
             </Button>
+            <Link to={`/category/${id}`} className='w-25 btn btn-primary' >
+                Back
+            </Link>
         </Form>
      </div>
     </Dashboard>

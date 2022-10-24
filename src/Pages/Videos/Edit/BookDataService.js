@@ -1,13 +1,11 @@
 import { db } from "../../../Firebase/firebase";
 
 import {
-  collection,
   getDoc,
 
   doc,
 } from "firebase/firestore";
 
-const bookCollectionRef = collection(db, "category");
 class BookDataService {
 
 

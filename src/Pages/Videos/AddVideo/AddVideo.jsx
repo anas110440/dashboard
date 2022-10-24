@@ -7,26 +7,43 @@ import { storage, db } from "../../../Firebase/firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const AddVideo = () => {
   const [formData, setFormData] = useState({
     title: "",
     video: "",
+    image: "",
     category: "",
+    status: "",
+
   });
 const navigate = useNavigate()
 
 const [progress, setProgress] = useState(0);
+const [progressImg, setProgressImg] = useState(0);
+
+
+
 const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
 };
 
-  const handleImageChange = (e) => {
-    setFormData({ ...formData, video: e.target.files[0] });
-  };
+const handleImageChange = (e) => {
+  setFormData({ ...formData, video: e.target.files[0] });
+};
+
+const handleImageCov = (e) => {
+  setFormData({ ...formData, image: e.target.files[0] });
+};
 
 
+
+
+
+// Publish =--------------------------------------------------------------------
   const handlePublish = (e) => {
+
     e.preventDefault();
 
     if (!formData.title || !formData.video || !formData.category ) {
@@ -34,8 +51,7 @@ const handleChange = (e) => {
       return;
     }
 
-    const storageRef = ref (storage, `/category-video/${Date.now()}${formData.video.name}`
-    );
+    const storageRef = ref (storage, `/${formData.category}/${Date.now()}${formData.video.name}`);
 
     const uploadImage = uploadBytesResumable(storageRef, formData.video);
 
@@ -55,24 +71,61 @@ const handleChange = (e) => {
           title: "",
           video: "",
           category: "",
+          status: "",
+
         });
 
       
 
         getDownloadURL(uploadImage.snapshot.ref).then((url) => {
-          const refrance = collection(db, "category", formData.category, "/videos");
-          addDoc(refrance, {
-            title: formData.title,
-            video: url,
-          })
-            .then(() => {
-              navigate(`/category`)
+          let vidUrl = url;
 
-            })
-            .catch((err) => {
-              console.log("Error adding article", { type: "error" });
-              console.log(formData);
-            });
+          const storageRef = ref (storage, `/${formData.category}/${Date.now()}${formData.image.name}`);
+
+          const uploadImage = uploadBytesResumable(storageRef, formData.image);
+      
+          uploadImage.on(
+            "state_changed",
+            (snapshot) => {
+              const progressPercent = Math.round(
+                (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+              );
+              setProgressImg(progressPercent);
+            },
+            (err) => {
+              console.log(err);
+            },
+            () => {
+              setFormData({
+                title: "",
+                video: "",
+                category: "",
+                status: "",
+      
+              });
+      
+            
+      
+              getDownloadURL(uploadImage.snapshot.ref).then((url) => {
+      
+                const refrance = collection(db, "category", formData.category, "/videos");
+                addDoc(refrance, {
+                  title: formData.title,
+                  video: vidUrl,
+                  image : url,
+                  status: formData.status === "0" ? false : true, 
+                })
+                  .then(() => {
+                    navigate(`/category`)
+      
+                  })
+                  .catch((err) => {
+                    console.log("Error adding Video", { type: "error" });
+                    console.log(formData);
+                  });
+              });
+            }
+          );
         });
       }
     );
@@ -122,6 +175,17 @@ const handleChange = (e) => {
 
           )}
 
+          <Form.Group controlId="formFile" className="mb-3">
+            <Form.Label>Select The Cover Image</Form.Label>
+            <Form.Control type="file"
+                     accept="image/*"
+                     onChange={(e) => handleImageCov(e)}
+                      required />
+            </Form.Group>
+            {progress === 0 ? null : (
+                  <ProgressBar striped variant="success" now={progressImg} />
+
+          )}
             <Form.Label>Category</Form.Label>
             <Form.Select aria-label="Default select example" className="mb-4"
               onChange={(e) => handleChange(e) }
@@ -134,9 +198,23 @@ const handleChange = (e) => {
               ))}              
             </Form.Select>
 
-            <Button variant="primary" type="submit" >
-                Add New
+            <Form.Label>Status</Form.Label>
+            <Form.Select aria-label="Default select example" className="mb-4"
+              onChange={(e) => handleChange(e) }
+              name="status"
+              defaultValue={formData.status}
+              required >
+              <option value="" >Choose Status</option>
+              <option value="1">Available</option>
+              <option value="0">Not Available</option>
+            </Form.Select>
+            
+            <Button variant="success" type="submit" className='w-25 float-end' >
+                Add
             </Button>
+            <Link to="/category" className='w-25 btn btn-primary' >
+                Back
+            </Link>
         </Form>
      </div>
     </Dashboard>

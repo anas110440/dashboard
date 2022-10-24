@@ -12,6 +12,7 @@ import { useState } from 'react'
 const Videos = () => {
   const { id } = useParams();
   const [workData, setWorkData] = useState([])
+  const [cat, setCat] = useState([])
 
   useEffect(() => {
 
@@ -21,6 +22,7 @@ const Videos = () => {
           const data = snapshot.docs.map((doc)=>({
               ...doc.data(), id:doc.id
           }))
+          setCat(data)
           data.map(async (elem)=>{
             const workQ = query(collection(db, `category/${id}/videos`))
             const workDetails = await getDocs(workQ)
@@ -31,10 +33,10 @@ const Videos = () => {
           })
         }
         getData()
+        
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [])
 
-    
-// eslint-disable-next-line react-hooks/exhaustive-deps
-}, [])
 
 
   return (
@@ -50,16 +52,26 @@ const Videos = () => {
                 <div className="col-12 col-md-4" key={key}>
                     <div className="card bg-dark">
                     <video src={doc.video} alt="" controls  />
+                    <img src={doc.image} alt="" controls  />
                     <div className="card-body">
                     <h3 className="card-title">{doc.title}</h3>
-                    
+                    <p className="card-text">
+                    {doc.status=== true ?(
+                                <span className="comment">Avilable</span>
+
+                              ):(
+                                <span className="visibility">Hidden</span>
+
+                              )}
+                      </p>
+
   
                     </div>
                     <div className="card-footer">
                     <Link to={`/category/video/edit/${doc.id}/${id}`} className="btn btn-outline-success">
                     Edit <i className='fas fa-edit'></i>
                     </Link>
-                    <Delete id={doc.id} cateid={id} video={doc.video} />
+                    <Delete id={doc.id} cateid={id} video={doc.video} image={doc.image} />
   
                   </div>
                 </div>
