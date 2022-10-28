@@ -4,15 +4,17 @@ import { getStorage } from 'firebase/storage';
 
 
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDwhNjBUAV_j94q3O_N_i8J5RhuyGn0kUA",
-  authDomain: "dashboard-e5d1e.firebaseapp.com",
-  projectId: "dashboard-e5d1e",
-  storageBucket: "dashboard-e5d1e.appspot.com",
-  messagingSenderId: "903984591242",
-  appId: "1:903984591242:web:38a2f0fc1cab49926b9873"
-};
 
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBJwZmm9HoHOb7VNjDY9a4pXVu_73oS1QA",
+  authDomain: "grad-proj-g3.firebaseapp.com",
+  projectId: "grad-proj-g3",
+  storageBucket: "grad-proj-g3.appspot.com",
+  messagingSenderId: "1007204384642",
+  appId: "1:1007204384642:web:6943bd812a101e6964d99b",
+  measurementId: "G-6PDKBGR912"
+};
 
 export const fire = initializeApp(firebaseConfig);
 export const fireStore = getFirestore(fire)
