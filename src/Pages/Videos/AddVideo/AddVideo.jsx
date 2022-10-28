@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Dashboard from '../../Dashboard/Dashboard';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import { collection, addDoc,onSnapshot, orderBy, query, setDoc, doc as Docc  } from "firebase/firestore";
+import { collection,onSnapshot, orderBy, query, setDoc, doc as Docc  } from "firebase/firestore";
 import { storage, db } from "../../../Firebase/firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import ProgressBar from 'react-bootstrap/ProgressBar';
