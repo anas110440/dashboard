@@ -116,7 +116,7 @@ const handleImageCov = (e) => {
      <div className="add-cate">
         <h2 className='h1 text-center mb-4 mt-4'>Add New Video</h2>
 
-        <Form className='d-block w-50 m-auto' onSubmit={handlePublish}>
+        <Form className='d-block w-50 m-auto mb-4' onSubmit={handlePublish}>
 
         <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
             <Form.Label>The Tittle</Form.Label>
@@ -174,10 +174,10 @@ const handleImageCov = (e) => {
               <option value="0">Not Available</option>
             </Form.Select>
             
-            <Button variant="success" type="submit" className='w-25 float-end' >
+            <Button variant="success" type="submit" className='w-auto  float-end' >
                 Add
             </Button>
-            <Link to="/category" className='w-25 btn btn-primary' >
+            <Link to="/category" className='w-auto  btn btn-primary' >
                 Back
             </Link>
         </Form>

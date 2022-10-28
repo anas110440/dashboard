@@ -190,7 +190,7 @@ const EditVideo = () => {
      <div className="add-cate">
         <h2 className='h1 text-center mb-4 mt-4'>Edit Video</h2>
 
-        <Form className='d-block w-50 m-auto' onSubmit={handlePublish}>
+        <Form className='d-block w-50 m-auto mb-3' onSubmit={handlePublish}>
         <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
             <Form.Label>The Tittle</Form.Label>
             <Form.Control 
@@ -239,10 +239,10 @@ const EditVideo = () => {
             </Form.Select>
        
 
-            <Button variant="success" type="submit" className='w-25 float-end' >
+            <Button variant="success" type="submit" className='w-auto float-end' >
                 Update
             </Button>
-            <Link to={`/category/${id}`} className='w-25 btn btn-primary' >
+            <Link to={`/category/${id}`} className='w-auto btn btn-primary ' >
                 Back
             </Link>
         </Form>

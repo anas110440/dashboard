@@ -44,10 +44,10 @@ const Categories = () => {
 												<div className="cate">
 
                             <div className="row">
-                              <div className="col-4 col-md-2">
+                              <div className="col-5 col-md-2">
                                 <img src={image} alt="" />
                               </div>
-                              <div className="col-md-10 col-8">
+                              <div className="col-md-10 col-7">
 
                             <h2><Link to={`/category/videos/${id}`}>{name}</Link></h2>
                             <div className="full-view">
