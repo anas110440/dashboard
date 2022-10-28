@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Dashboard from '../../Dashboard/Dashboard';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import { collection, addDoc,onSnapshot, orderBy, query } from "firebase/firestore";
+import { collection, addDoc,onSnapshot, orderBy, query, setDoc, doc as Docc  } from "firebase/firestore";
 import { storage, db } from "../../../Firebase/firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import ProgressBar from 'react-bootstrap/ProgressBar';
@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 
 const AddVideo = () => {
   const [formData, setFormData] = useState({
-    title: "",
+    tittle: "",
     video: "",
     image: "",
     category: "",
@@ -20,8 +20,7 @@ const AddVideo = () => {
   });
 const navigate = useNavigate()
 
-const [progress, setProgress] = useState(0);
-const [progressImg, setProgressImg] = useState(0);
+const [progress, setProgressImg] = useState(0);
 
 
 
@@ -29,9 +28,6 @@ const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
 };
 
-const handleImageChange = (e) => {
-  setFormData({ ...formData, video: e.target.files[0] });
-};
 
 const handleImageCov = (e) => {
   setFormData({ ...formData, image: e.target.files[0] });
@@ -46,14 +42,14 @@ const handleImageCov = (e) => {
 
     e.preventDefault();
 
-    if (!formData.title || !formData.video || !formData.category ) {
+    if (!formData.tittle || !formData.image || !formData.category ) {
       alert("Please fill all the fields");
       return;
     }
 
-    const storageRef = ref (storage, `/${formData.category}/${Date.now()}${formData.video.name}`);
+    const storageRef = ref (storage, `/${formData.category}/${Date.now()}${formData.image.name}`);
 
-    const uploadImage = uploadBytesResumable(storageRef, formData.video);
+    const uploadImage = uploadBytesResumable(storageRef, formData.image);
 
     uploadImage.on(
       "state_changed",
@@ -61,14 +57,14 @@ const handleImageCov = (e) => {
         const progressPercent = Math.round(
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100
         );
-        setProgress(progressPercent);
+        setProgressImg(progressPercent);
       },
       (err) => {
         console.log(err);
       },
       () => {
         setFormData({
-          title: "",
+          tittle: "",
           video: "",
           category: "",
           status: "",
@@ -78,40 +74,13 @@ const handleImageCov = (e) => {
       
 
         getDownloadURL(uploadImage.snapshot.ref).then((url) => {
-          let vidUrl = url;
+                const idDoc = Math.floor(100000 + Math.random() * 900000).toString();
 
-          const storageRef = ref (storage, `/${formData.category}/${Date.now()}${formData.image.name}`);
-
-          const uploadImage = uploadBytesResumable(storageRef, formData.image);
-      
-          uploadImage.on(
-            "state_changed",
-            (snapshot) => {
-              const progressPercent = Math.round(
-                (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-              );
-              setProgressImg(progressPercent);
-            },
-            (err) => {
-              console.log(err);
-            },
-            () => {
-              setFormData({
-                title: "",
-                video: "",
-                category: "",
-                status: "",
-      
-              });
-      
-            
-      
-              getDownloadURL(uploadImage.snapshot.ref).then((url) => {
-      
                 const refrance = collection(db, "category", formData.category, "/videos");
-                addDoc(refrance, {
-                  title: formData.title,
-                  video: vidUrl,
+                setDoc(Docc(refrance, idDoc), {
+                  id : idDoc,
+                  tittle: formData.tittle,
+                  video: formData.video,
                   image : url,
                   status: formData.status === "0" ? false : true, 
                 })
@@ -126,9 +95,6 @@ const handleImageCov = (e) => {
               });
             }
           );
-        });
-      }
-    );
   };
 
   const [category, setCategory] = useState([]);
@@ -148,32 +114,31 @@ const handleImageCov = (e) => {
   return (
     <Dashboard>
      <div className="add-cate">
-        <h2 className='h1 text-center mb-4 mt-4'>Add New Vedio</h2>
+        <h2 className='h1 text-center mb-4 mt-4'>Add New Video</h2>
 
         <Form className='d-block w-50 m-auto' onSubmit={handlePublish}>
+
         <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-            <Form.Label>The Title</Form.Label>
+            <Form.Label>The Tittle</Form.Label>
             <Form.Control 
               type="text" 
-              name="title"
-              value={formData.title}
+              name="tittle"
+              value={formData.tittle}
               onChange={(e) => handleChange(e)}
               required />
             </Form.Group>
 
-    
-
-            <Form.Group controlId="formFile" className="mb-3">
-            <Form.Label>Select The Video</Form.Label>
-            <Form.Control type="file"
-                     accept="video/mp4,video/x-m4v,video/*"
-                     onChange={(e) => handleImageChange(e)}
-                      required />
+    <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+            <Form.Label>Video URL</Form.Label>
+            <Form.Control 
+              type="url" 
+              name="video"
+              value={formData.video}
+              onChange={(e) => handleChange(e)}
+              required />
             </Form.Group>
-            {progress === 0 ? null : (
-                  <ProgressBar striped variant="success" now={progress} />
 
-          )}
+         
 
           <Form.Group controlId="formFile" className="mb-3">
             <Form.Label>Select The Cover Image</Form.Label>
@@ -183,7 +148,7 @@ const handleImageCov = (e) => {
                       required />
             </Form.Group>
             {progress === 0 ? null : (
-                  <ProgressBar striped variant="success" now={progressImg} />
+                  <ProgressBar striped variant="success" now={progress} />
 
           )}
             <Form.Label>Category</Form.Label>

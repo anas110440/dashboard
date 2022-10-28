@@ -4,7 +4,6 @@ import {  db } from "../../Firebase/firebase";
 import "./style.css"
 import Dashboard from './../Dashboard/Dashboard';
 import {Link} from "react-router-dom"
-import Delete from './Delete/Delete';
 const Categories = () => {
 
   const [category, setCategory] = useState([]);
@@ -33,7 +32,7 @@ const Categories = () => {
 
               <div className="card-header border-primary">
 										<i className="fas fa-folder-open"></i> Latest Categories
-                                        <Link to="/category/add-category" className="btn btn-primary btn-sm float-end">Add Category <i className="fas fa-plus"></i></Link>
+                               
 
                                         <Link to="/category/video/add-video" className="btn btn-success btn-sm float-end me-2">Add Video <i className="fas fa-plus"></i></Link>
                                         </div>	
@@ -43,14 +42,7 @@ const Categories = () => {
                        <div className="card-body " key={id}>
 											<ul className="list-unstyled latest-categories">
 												<div className="cate">
-                          <div className="hidden-button">
-                           
-                           <Link to={`/category/edit/${id}`} className="btn btn-outline-success btn-sm">
-                            Edit <i className='fas fa-edit'></i>
-                           </Link>
-                            <Delete id={id} imageUrl={image} />
 
-                            </div>
                             <div className="row">
                               <div className="col-4 col-md-2">
                                 <img src={image} alt="" />

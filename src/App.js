@@ -2,9 +2,7 @@ import React, {useState} from 'react';
 import Login from './Pages/Login/Login';
 import Categories from './Pages/Categories/Categories';
 import Videos from './Pages/Videos/Videos';
-import AddCate from './Pages/Categories/AddCategory/AddCate';
 import {BrowserRouter, Routes, Route,} from "react-router-dom";
-import Edit from './Pages/Categories/Edit/Edit';
 import AddVideo from './Pages/Videos/AddVideo/AddVideo';
 import EditVideo from './Pages/Videos/Edit/Edit';
 
@@ -29,12 +27,7 @@ function App() {
       <Route path='/category' element={hasAccount?  <Categories />  :
       <Login setHasAccount={setHasAccount} />} />
 
-      
-      <Route path='/category/add-category' element={hasAccount?  <AddCate />  :
-      <Login setHasAccount={setHasAccount} />} />
 
-      <Route path='/category/edit/:id' element={hasAccount?  <Edit />  :
-      <Login setHasAccount={setHasAccount} />} />
 
       <Route path='/category/videos/:id' element={hasAccount? <Videos />  :
       <Login setHasAccount={setHasAccount} />} />

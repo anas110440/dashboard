@@ -29,7 +29,7 @@
 .videos .card .card-text .comment{
 	background-color:#3b996d
 }
-.videos  video{
+.videos  iframe{
 width: 100%;
 height: 300px;
 object-fit: cover;

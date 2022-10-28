@@ -8,6 +8,7 @@ import Delete from './Delete/Delete'
 import { collection,  getDocs, query } from 'firebase/firestore'
 import { useEffect } from 'react'
 import { useState } from 'react'
+import Iframe from 'react-iframe'
 
 const Videos = () => {
   const { id } = useParams();
@@ -49,10 +50,14 @@ const Videos = () => {
               workData.length !== 0 ? workData?.map((doc, key) => (
                 <div className="col-12 col-md-4" key={key}>
                     <div className="card bg-dark">
-                    <video src={doc.video} alt="" controls  />
+                    <Iframe url={doc.video}
+                        id=""
+                        className=""
+                        display="block"
+                        position="relative"/>
                     <img src={doc.image} alt="" controls  />
                     <div className="card-body">
-                    <h3 className="card-title">{doc.title}</h3>
+                    <h3 className="card-title">{doc.tittle}</h3>
                     <p className="card-text">
                     {doc.status=== true ?(
                                 <span className="comment">Avilable</span>
@@ -69,7 +74,7 @@ const Videos = () => {
                     <Link to={`/category/video/edit/${doc.id}/${id}`} className="btn btn-outline-success">
                     Edit <i className='fas fa-edit'></i>
                     </Link>
-                    <Delete id={doc.id} cateid={id} video={doc.video} image={doc.image} />
+                    <Delete id={doc.id} cateid={id} image={doc.image} />
   
                   </div>
                 </div>
